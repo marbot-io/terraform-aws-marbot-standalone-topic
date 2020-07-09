@@ -1,6 +1,6 @@
 # Standalone SNS topic
 
-SNS topic connected to [marbot](https://marbot.io/). 
+SNS topic connected to [marbot](https://marbot.io/) to forward events to Slack or Microsoft Teams.
 
 ## Usage
 
@@ -13,7 +13,7 @@ module "marbot-standalone-topic" {
   source  = "marbot-io/marbot-standalone-topic/aws"
   #version = "x.y.z"    # we recommend to pin the version
 
-  endpoint_id      = "" # to get this value, select a Slack channel where marbot belongs to and send a message like this: "@marbot show me my endpoint id"
+  endpoint_id      = "" # to get this value, select a channel where marbot belongs to and send a message like this: "@marbot show me my endpoint id"
 }
 ```
 3. Run the following commands:
