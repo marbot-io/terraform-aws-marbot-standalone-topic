@@ -89,6 +89,31 @@ data "aws_iam_policy_document" "topic_policy" {
       values   = [data.aws_caller_identity.current.account_id]
     }
   }
+
+  statement {
+    sid       = "Sid4"
+    effect    = "Allow"
+    actions   = ["sns:Publish"]
+    resources = [join("", aws_sns_topic.marbot.*.arn)]
+
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::646659390643:root",
+        "arn:aws:iam::316112463485:root",
+        "arn:aws:iam::166987590008:root",
+        "arn:aws:iam::758058086616:root",
+        "arn:aws:iam::162588757376:root",
+        "arn:aws:iam::526946625049:root",
+        "arn:aws:iam::454640832652:root",
+        "arn:aws:iam::406045910587:root",
+        "arn:aws:iam::537503971621:root",
+        "arn:aws:iam::357557129151:root",
+        "arn:aws:iam::146838936955:root",
+        "arn:aws:iam::453420244670:root"
+      ]
+    }
+  }
 }
 
 resource "aws_sns_topic_subscription" "marbot" {
@@ -137,7 +162,7 @@ resource "aws_cloudwatch_event_target" "monitoring_jump_start_connection" {
 {
   "Type": "monitoring-jump-start-tf-connection",
   "Module": "standalone-topic",
-  "Version": "0.2.1",
+  "Version": "0.3.0",
   "Partition": "${data.aws_partition.current.partition}",
   "AccountId": "${data.aws_caller_identity.current.account_id}",
   "Region": "${data.aws_region.current.name}"
