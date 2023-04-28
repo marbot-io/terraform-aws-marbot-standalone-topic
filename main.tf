@@ -73,7 +73,7 @@ data "aws_iam_policy_document" "topic_policy" {
     }
   }
 
-  statement {
+  statement { # SES https://docs.aws.amazon.com/ses/latest/dg/configure-sns-notifications.html
     sid       = "Sid3"
     effect    = "Allow"
     actions   = ["sns:Publish"]
@@ -91,7 +91,7 @@ data "aws_iam_policy_document" "topic_policy" {
     }
   }
 
-  statement {
+  statement { # Inspector https://docs.aws.amazon.com/inspector/v1/userguide/inspector_assessments.html#sns-topic
     sid       = "Sid4"
     effect    = "Allow"
     actions   = ["sns:Publish"]
@@ -145,7 +145,7 @@ JSON
 
 resource "aws_cloudwatch_event_rule" "monitoring_jump_start_connection" {
   depends_on = [aws_sns_topic_subscription.marbot]
-  count      = var.enabled ? 1 : 0
+  count      = (var.module_version_monitoring_enabled && var.enabled) ? 1 : 0
 
   name                = "marbot-standalone-topic-connection-${random_id.id8.hex}"
   description         = "Monitoring Jump Start connection. (created by marbot)"
@@ -154,7 +154,7 @@ resource "aws_cloudwatch_event_rule" "monitoring_jump_start_connection" {
 }
 
 resource "aws_cloudwatch_event_target" "monitoring_jump_start_connection" {
-  count = var.enabled ? 1 : 0
+  count = (var.module_version_monitoring_enabled && var.enabled) ? 1 : 0
 
   rule      = join("", aws_cloudwatch_event_rule.monitoring_jump_start_connection.*.name)
   target_id = "marbot"
@@ -163,7 +163,7 @@ resource "aws_cloudwatch_event_target" "monitoring_jump_start_connection" {
 {
   "Type": "monitoring-jump-start-tf-connection",
   "Module": "standalone-topic",
-  "Version": "0.4.2",
+  "Version": "0.5.0",
   "Partition": "${data.aws_partition.current.partition}",
   "AccountId": "${data.aws_caller_identity.current.account_id}",
   "Region": "${data.aws_region.current.name}"
